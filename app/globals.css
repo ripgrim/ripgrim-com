@@ -1,0 +1,279 @@
+@import "tailwindcss";
+
+/* Theme is toggled by a `.dark` class on <html> (boot script + keypress
+   toggle), not the OS preference — so bind Tailwind's `dark:` variant to that
+   class rather than the default prefers-color-scheme media query. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+:root {
+  --bg: #f9f9f8;
+  --text: #1f1f1a;
+  --text-secondary: #636360;
+  --text-tertiary: #9a9a96;
+  --line: rgba(0, 0, 0, 0.08);
+  --hover-surface: rgba(0, 0, 0, 0.03);
+  --tooltip-surface: #ffffff;
+  --activity-empty: color-mix(in srgb, var(--text) 7%, transparent);
+  /* Cursor on the light canvas: light fill with a black outline. */
+  --cursor-fill: #f9f9f8;
+  --cursor-stroke: #1f1f1a;
+
+  /* Accent used for text selection. */
+  --creed: #2563eb;
+}
+
+/* Dark theme. Resolved to a `.dark` class on <html> by the inline boot script
+   (defaults to the system/browser preference, overridable via the hidden
+   keypress toggle). */
+.dark {
+  --bg: #0e0e0d;
+  --text: #e7e7e2;
+  --text-secondary: #a3a39e;
+  --text-tertiary: #6f6f6a;
+  --line: rgba(255, 255, 255, 0.08);
+  --hover-surface: rgba(255, 255, 255, 0.035);
+  --tooltip-surface: #161615;
+  --activity-empty: color-mix(in srgb, var(--text) 7%, transparent);
+  /* Inverted on the dark canvas: dark fill with a light outline. */
+  --cursor-fill: #0e0e0d;
+  --cursor-stroke: #e7e7e2;
+
+  --creed: #2563eb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  margin: 0;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--creed) 22%, transparent);
+}
+
+.keyword {
+  position: relative;
+  color: var(--text);
+  font-weight: 500;
+  outline: none;
+  transition: color 160ms ease;
+}
+
+.project-preview {
+  border-radius: 0.5rem;
+  background: var(--tooltip-surface);
+  box-shadow: 0 0 0 2px var(--activity-empty);
+}
+
+.project-preview > img {
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.project-preview-cta {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 0.35rem;
+  background: var(--creed);
+  padding: 0.24rem 0.48rem;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1;
+  transition: opacity 160ms ease;
+}
+
+.project-preview-cta:hover {
+  opacity: 0.78;
+}
+
+.activity-scroll {
+  margin: -3rem -0.25rem -0.25rem;
+  overflow: visible;
+  padding: 3rem 0.25rem 0.25rem;
+  scrollbar-width: none;
+}
+
+.activity-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.activity-grid {
+  display: grid;
+  grid-auto-columns: 8px;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(7, 8px);
+  gap: 2px;
+  width: max-content;
+}
+
+.activity-day {
+  position: relative;
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--activity-empty);
+  outline: none;
+}
+
+.activity-day[data-project="creed"][data-level="1"] {
+  background: color-mix(in srgb, var(--creed) 34%, var(--tooltip-surface));
+}
+.activity-day[data-project="creed"][data-level="2"] {
+  background: color-mix(in srgb, var(--creed) 54%, var(--tooltip-surface));
+}
+.activity-day[data-project="creed"][data-level="3"] {
+  background: color-mix(in srgb, var(--creed) 76%, var(--tooltip-surface));
+}
+.activity-day[data-project="creed"][data-level="4"] {
+  background: var(--creed);
+}
+
+.activity-day[data-project="other"][data-level="1"] {
+  background: color-mix(in srgb, var(--text-tertiary) 28%, var(--tooltip-surface));
+}
+.activity-day[data-project="other"][data-level="2"] {
+  background: color-mix(in srgb, var(--text-tertiary) 46%, var(--tooltip-surface));
+}
+.activity-day[data-project="other"][data-level="3"] {
+  background: color-mix(in srgb, var(--text-tertiary) 66%, var(--tooltip-surface));
+}
+.activity-day[data-project="other"][data-level="4"] {
+  background: var(--text-tertiary);
+}
+
+.activity-day[data-level]:not([data-level="0"]):hover,
+.activity-day[data-level]:not([data-level="0"]):focus-visible {
+  z-index: 20;
+}
+
+.keyword:hover,
+.keyword:focus-visible {
+  color: color-mix(in srgb, var(--text) 78%, var(--bg));
+}
+
+.keyword::after,
+.activity-day::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 0.6rem);
+  left: 50%;
+  z-index: 10;
+  width: max-content;
+  max-width: min(24rem, calc(100vw - 3rem));
+  padding: 0.55rem 0.7rem;
+  border-radius: 0.5rem;
+  background: var(--tooltip-surface);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+  color: var(--text);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.35;
+  opacity: 0;
+  pointer-events: none;
+  text-align: center;
+  transform: translate(-50%, 0.35rem) scale(0.96);
+  transform-origin: bottom center;
+  transition:
+    opacity 160ms ease,
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.keyword:hover::after,
+.keyword:focus-visible::after,
+.activity-day[data-level]:not([data-level="0"]):hover::after,
+.activity-day[data-level]:not([data-level="0"]):focus-visible::after {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+}
+
+@media (max-width: 575px) {
+  .activity-scroll {
+    overflow-x: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .keyword::after {
+    transition: opacity 120ms ease;
+    transform: translate(-50%, 0);
+  }
+}
+
+/* Theme flip uses a circular clip-path reveal (see theme-key). Kill the
+   default cross-fade so the new theme wipes in cleanly over the old one. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) {
+  z-index: 1;
+}
+::view-transition-new(root) {
+  z-index: 2;
+}
+
+/* Custom smooth cursor — hide the native one once it's active */
+.has-smooth-cursor,
+.has-smooth-cursor * {
+  cursor: none !important;
+}
+
+.smooth-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  /* Pivot at the arrow tip (displayed 12.5,2.5) so rotation/scale read from the
+     pointer point. The JS offsets translate by (-12.5,-2.5) to match. */
+  transform-origin: 12.5px 2.5px;
+  transition: opacity 0.25s ease;
+  will-change: transform;
+}
+.smooth-cursor svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  transform-origin: 12.5px 2.5px;
+  transition:
+    opacity 160ms ease,
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.cursor-hand {
+  opacity: 0;
+  transform: scale(0.72) rotate(-12deg);
+}
+.smooth-cursor.is-hand .cursor-arrow {
+  opacity: 0;
+  transform: scale(0.72) rotate(12deg);
+}
+.smooth-cursor.is-hand .cursor-hand {
+  opacity: 1;
+  transform: scale(1);
+}
+
+@media (pointer: coarse) {
+  .smooth-cursor {
+    display: none;
+  }
+}
