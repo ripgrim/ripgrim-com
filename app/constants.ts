@@ -48,7 +48,7 @@ export type Project = {
   image: string;
   alt: string;
   description: CopySegment[];
-  cta: { label: string; href: string };
+  cta: { prefix: string; label: string; href: string };
 };
 
 export const PROJECTS: Project[] = [
@@ -62,7 +62,15 @@ export const PROJECTS: Project[] = [
       { keyword: "contribution", tooltip: "before it ever hits your inbox" },
       " so you keep the good stuff and drop the rest.",
     ],
-    cta: { label: "here", href: "https://tripwire.sh" },
+    cta: { prefix: "Try it", label: "here", href: "https://tripwire.sh" },
+  },
+  {
+    image: "/images/boring.jpg",
+    alt: "boring software - definitely boring",
+    description: [
+      "boring software is the best software. it's the software that just works.",
+    ],
+    cta: { prefix: "Get boring", label: "here", href: "https://tripwire.sh" },
   }
 ];
 

@@ -29,8 +29,8 @@ export default function Home() {
         <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
           {PROJECTS.map((project) => (
             <article
-              key={project.cta.href}
-              className="project-preview w-full overflow-visible"
+              key={project.image}
+              className="project-preview flex h-full w-full flex-col overflow-visible"
             >
               <img
                 src={project.image}
@@ -39,12 +39,12 @@ export default function Home() {
                 height={630}
                 className="aspect-[40/21] w-full object-cover"
               />
-              <div className="p-4">
+              <div className="flex flex-1 flex-col p-4">
                 <p className="text-[15px] font-normal leading-6 text-[var(--text-secondary)]">
                   <Copy segments={project.description} />
                 </p>
-                <p className="mt-3 text-[13px] text-[var(--text-secondary)]">
-                  Try it{" "}
+                <p className="mt-auto pt-3 text-[13px] text-[var(--text-secondary)]">
+                  {project.cta.prefix} {" "}
                   <a
                     href={project.cta.href}
                     target="_blank"
