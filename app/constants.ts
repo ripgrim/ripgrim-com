@@ -70,7 +70,7 @@ export const PROJECTS: Project[] = [
     description: [
       "boring software is the best software. it's the software that just works.",
     ],
-    cta: { prefix: "Get boring", label: "here", href: "https://tripwire.sh" },
+    cta: { prefix: "Get boring", label: "here", href: "https://boringsoftware.net" },
   }
 ];
 
